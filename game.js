@@ -13,9 +13,12 @@ function changeTurn() {
 
 for(let box of boxes){
     box.addEventListener('click', (clickEvent)=>{
-        box.innerText = (box.innerText !== '') ? box.innerText : turn;
-        changeTurn(turn);
-        findWinner();
+        if(turn === 'X'){
+            box.innerText = (box.innerText !== '') ? box.innerText : turn;
+            changeTurn(turn);
+            findWinner();
+        }
+
     })
 }
 
@@ -37,6 +40,7 @@ function findWinner() {
             return;
         }
     }
+    computerMove();
 }
 
 function showWinner(winner){
@@ -59,6 +63,16 @@ function showWinner(winner){
             scoreBoard.oScore++;
         }
     }
+}
+
+function computerMove(){
+    let boxIndex = Math.floor(Math.random() * 10);
+    while(boxes[boxIndex].innerText !== ''){
+        boxIndex = Math.floor(Math.random() * 10);
+    }
+    boxes[boxIndex].innerText = 'O';
+    findWinner();
+
 }
 
 function resetGame(){
