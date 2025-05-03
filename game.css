@@ -1,0 +1,167 @@
+*{
+    margin: 0%;
+    padding: 0%;
+    box-sizing: border-box;
+}
+
+body{
+    height: 100vh;
+    max-width: 100vw;
+    background-color: rgb(27, 17, 66);
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* turn */
+
+
+.turn-wrapper{
+    height: 100px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.turn{
+    height: 100%;
+    width: 100px;
+    border: 3px solid rgba(0, 0, 0, .2);
+    border-radius: 15px;
+    margin: 0px 25px 0px 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(0, 0, 0, .1);
+}
+.turn-wrapper .turn:nth-child(1){
+    background-color: rgb(71, 45, 180);
+}
+
+.turn :nth-child(1){
+    font-size: .9rem;
+    color: white;
+    padding-top: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 500;
+
+}
+
+.turn :nth-child(2){
+    font-size: 3rem;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    margin-top: 8px;
+    font-family: "Arial Black", "Arial Bold", Gadget, sans-serif;
+    font-size: 50px;
+    font-style: normal; 
+    font-variant: normal; 
+    font-weight: 700; 
+    line-height: 26.4px; 
+    color: white;
+    
+}
+
+#turn-x{
+    color: crimson;
+}
+#turn-o{
+    color: gold;
+}
+
+/* board */
+
+#board{
+    height:340px;
+    width: 340px;
+    background-color: rgb(91, 55, 200);
+    border-radius: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    align-self: center;
+    margin-top: 100px;
+    position: relative;
+    gap: 10px;
+}
+
+.box{
+    height: 100px;
+    width: 100px;
+    background-color: rgb(21, 0, 54);
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    font-family: "Arial Black", "Arial Bold", Gadget, sans-serif; 
+    font-size: 50px; 
+    font-style: normal; 
+    font-variant: normal; 
+    font-weight: 700; 
+    line-height: 26.4px;
+}
+
+.box:hover{
+    cursor: pointer;
+    transition: all 0.2s ease;
+    height: 105px;
+    width: 105px;
+    background-color: rgba(21, 0, 54, .7);
+}
+
+#endText{
+    font-family: "Arial Black", "Arial Bold", Gadget, sans-serif;
+    font-size: 25px;
+    font-weight: 600;
+    margin: 30px;
+    text-align: center;
+}
+
+#button{
+    margin: 40px;
+    height: 4rem;
+    width: 14rem;
+    border-radius: 2rem;
+    border: 4px solid rgba(0, 0, 0, .8);
+    align-self:  center;
+    font-size: 2rem ;
+    font-weight: bold;
+    color: rgb(21, 0, 54);
+    background-color:rgb(91, 55, 200);
+    transition: all 0.3s ease-in-out;
+
+}
+#button:hover{
+    cursor: pointer;
+    background-color: rgba(101, 65, 210, 1);
+    /*font-size: 2.2rem;*/
+
+}
+#button:active{
+    background-color: rgb(71, 45, 180);
+    color: rgb(21, 0, 54);
+    font-size: 1.8rem ;
+    transition: all 0.1s ease-in-out;
+}
+
+.x{
+    color: crimson;
+}
+.o{
+    color: gold;
+}
+
+
+
+
+
+
+
+
