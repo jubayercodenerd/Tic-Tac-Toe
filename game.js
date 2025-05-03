@@ -1,87 +1,126 @@
 const winIndexes = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-var turn = 'X';
+let turn = 'X';
+
 var scoreBoard = {
     xScore : 0,
     oScore : 0
 }
+let gameOver = false;
+let computerMoveTimeOut = null;
 
-const boxes = document.getElementsByClassName("moves");
+const para = document.createElement("p");
+para.id = "endText";
 
-for(let box of boxes){                          //this piece of code prepares the boxes on the board for user moves by adding evenListeners
-    box.addEventListener('click', (clickEvent)=>{
-        if(turn === 'X'){
-            box.innerText = (box.innerText !== '') ? box.innerText : turn;  // if the box is empty, then upon click a move will be placed depending on the turn
-            changeTurn(turn);                                               // note: here it only works for pvp and not player vs. comp. for player vs. comp we will
-            findWinner();                                                   // just place user move upon click and restrict user from placing double moves.
-            computerMove();
+const boxes = document.getElementsByClassName("box");
+
+const turnBox = document.getElementsByClassName("turn");
+turnBox[0].style.transition = "all  .25s ease-in-out";
+turnBox[1].style.transition = "all  .25s ease-in-out";
+
+for(let box of boxes){
+    box.addEventListener("click",async function(event){
+        if(box.innerText === '' && turn === 'X' && !gameOver){
+            box.style.color = 'crimson';
+            box.innerText = 'X';
+            changeTurn();
+            let hasWinner = await findWinner();
+            if(!isDraw() && !hasWinner){
+                let randTimeout = Math.random() * 1000;
+                computerMoveTimeOut = setTimeout(async () => {
+                    await computerMove();
+                    hasWinner = await findWinner(); // Check if computer wins
+                    if (hasWinner) return; // Exit if the computer wins
+                    if (isDraw()) {
+                        para.textContent = "It's a draw!";
+                        para.style.color = 'crimson';
+                        resetButton.after(para);
+                        gameOver = true;
+                        resetButton.innerText = 'Play Again';
+                    }
+                }, randTimeout);
+            }
+            else if(isDraw() && !hasWinner){
+                para.id = "endText";
+                para.textContent = "It's a draw!";
+                para.style.color = 'crimson';
+                resetButton.after(para);
+                gameOver = true;
+                button.innerText = 'Play Again';
+
+            }
         }
-
     })
 }
 
-function changeTurn() {             // this function will change player turns
+let resetButton = document.getElementById("button");
+resetButton.addEventListener("click", function(event){
+    resetButton.innerText = 'Reset';
+    resetGame();
+})
+
+function changeTurn(){
     turn = (turn === 'X') ? 'O' : 'X';
+    turnBox[0].style.backgroundColor = (turn === 'X') ? 'rgb(71, 45, 180)' : 'rgba(0, 0, 0, .1)';
+    turnBox[1].style.backgroundColor = (turn === 'X') ? 'rgba(0, 0, 0, .1)' : 'rgb(71, 45, 180)';
 }
 
-
-function findDraw(){            // this function will return a boolean value that will check for draws
+function isDraw(){
     for(let box of boxes){
-         if(box.innerText === ''){
-             return false;
+        if(box.innerText === ''){
+            return false;
         }
     }
+    turnBox[0].style.backgroundColor = 'rgba(0, 0, 0, .1)';
+    turnBox[1].style.backgroundColor = 'rgba(0, 0, 0, .1)';
     return true;
 }
 
-function findWinner() {             // this function will find if there's a winner or if it's a draw using the findDraw function above
-    winner = "";
-    for(let index in winIndexes){
-        if(boxes[index[0]].innerText === boxes[index[1]].innerText &&
-            boxes[index[1]].innerText === boxes[index[2]].innerText ){
-            !findDraw() ? showWinner(boxes[index[1]].innerText.toLowerCase()) :  showWinner('draw') ;
-            return;
+function findWinner(){
+    return new Promise((resolve, reject) => {
+        for(let index of winIndexes){
+            if (boxes[index[0]].innerText === boxes[index[1]].innerText &&
+                boxes[index[1]].innerText === boxes[index[2]].innerText &&
+                boxes[index[0]].innerText !== '') {
+
+                let winner = boxes[index[1]].innerText;
+                para.textContent = winner === 'X' ? 'You win!' : 'Computer Wins!';
+                para.style.color = 'crimson';
+                resetButton.after(para);
+                gameOver = true;
+                button.innerText = 'Play Again';
+                resolve(true);
+                turnBox[0].style.backgroundColor = 'rgba(0, 0, 0, .1)';
+                turnBox[1].style.backgroundColor = 'rgba(0, 0, 0, .1)';
+                return;
+            }
         }
-    }
+        resolve(false);
+    })
 }
 
-function showWinner(winner){            //this function will show the winner on the screen and will also prepare for the next round
-    let xWins = "X won!";
-    let oWins = "O won!";
-    let draw = "It's a draw!";
-    if (winner === 'draw'){
-        console.log(draw);
-    }
-    else {
-        if(winner === 'x'){
-            console.log(xWins);
+function computerMove(){
+            let moveIndex = Math.floor(Math.random() * 9);
+            while(boxes[moveIndex].innerText !== ''){
+                moveIndex =  Math.floor(Math.random() * 9);
+            }
+
+            boxes[moveIndex].innerText = 'O';
+            boxes[moveIndex].style.color = 'gold';
             changeTurn();
-            resetGame();
-            scoreBoard.xScore++;
-        }
-        else {
-            console.log(oWins);
-            resetGame();
-            scoreBoard.oScore++;
-        }
-    }
 }
 
-function computerMove(){            //this function generates computer moves
-    let boxIndex = Math.floor(Math.random() * 10);
-    while(boxes[boxIndex].innerText !== ''){
-        boxIndex = Math.floor(Math.random() * 10);
+function resetGame(){
+    if(computerMoveTimeOut){
+        clearTimeout(computerMoveTimeOut);
+        computerMoveTimeOut = null;
     }
-    boxes[boxIndex].innerText = 'O';
-    findWinner();
-}
-
-function resetGame(){           // this function will be used by the showWinner function to reset the board after each round
     for(let box of boxes){
         box.innerText = '';
     }
+    gameOver = false;
+    turn = 'X';
+    para.remove();
+    turnBox[0].style.backgroundColor = (turn === 'X') ? 'rgb(71, 45, 180)' : 'rgba(0, 0, 0, .1)';
+    turnBox[1].style.backgroundColor = (turn === 'X') ? 'rgba(0, 0, 0, .1)' : 'rgb(71, 45, 180)';
 }
 
-function resetScoreBoard(){    // this function will reset the scoreboard
-    scoreBoard.xScore = 0;
-    scoreBoard.oScore = 0;
-}
