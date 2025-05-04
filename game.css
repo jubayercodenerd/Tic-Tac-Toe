@@ -110,9 +110,10 @@ body{
 
 .box:hover{
     cursor: pointer;
-    transition: all 0.2s ease;
-    height: 105px;
-    width: 105px;
+    transition: all 0.4s ease-out;
+    transform:  scale(1.05);
+    /*height: 105px;*/
+    /*width: 105px;*/
     background-color: rgba(21, 0, 54, .7);
 }
 

@@ -98,23 +98,90 @@ function findWinner(){
     })
 }
 
-function computerMove(){
-            let moveIndex = Math.floor(Math.random() * 9);
-            while(boxes[moveIndex].innerText !== ''){
-                moveIndex =  Math.floor(Math.random() * 9);
+function computerMove() {
+    // 1. Try to win
+    for (let index of winIndexes) {
+        let possibleWinner = boxes[index[0]].innerText + boxes[index[1]].innerText + boxes[index[2]].innerText;
+        if (possibleWinner === 'OO') {
+            for (let i of index) {
+                if (boxes[i].innerText === '') {
+                    boxes[i].innerText = 'O';
+                    boxes[i].style.color = 'gold';
+                    changeTurn();
+                    return;
+                }
             }
+        }
+    }
 
-            boxes[moveIndex].innerText = 'O';
-            boxes[moveIndex].style.color = 'gold';
+    // 2. Block player's winning move
+    for (let index of winIndexes) {
+        let possibleBlock = boxes[index[0]].innerText + boxes[index[1]].innerText + boxes[index[2]].innerText;
+        if (possibleBlock === 'XX') {
+            for (let i of index) {
+                if (boxes[i].innerText === '') {
+                    boxes[i].innerText = 'O';
+                    boxes[i].style.color = 'gold';
+                    changeTurn();
+                    return;
+                }
+            }
+        }
+    }
+
+    // 3. Block fork by picking a side (anti-fork logic)
+    if (
+        (boxes[0].innerText === 'X' && boxes[8].innerText === 'X') ||
+        (boxes[2].innerText === 'X' && boxes[6].innerText === 'X')
+    ) {
+        let forkBlock = [1, 3, 5, 7];
+        for (let i of forkBlock) {
+            if (boxes[i].innerText === '') {
+                boxes[i].innerText = 'O';
+                boxes[i].style.color = 'gold';
+                changeTurn();
+                return;
+            }
+        }
+    }
+
+    // 4. Take center if available
+    if (boxes[4].innerText === '') {
+        boxes[4].innerText = 'O';
+        boxes[4].style.color = 'gold';
+        changeTurn();
+        return;
+    }
+
+    // 5. Take a corner if available
+    let preferIndex = [0, 2, 6, 8];
+    for (let i of preferIndex) {
+        if (boxes[i].innerText === '') {
+            boxes[i].innerText = 'O';
+            boxes[i].style.color = 'gold';
             changeTurn();
+            return;
+        }
+    }
+
+    // 6. Take any remaining side or empty box
+    for (let i = 0; i < 9; i++) {
+        if (boxes[i].innerText === '') {
+            boxes[i].innerText = 'O';
+            boxes[i].style.color = 'gold';
+            changeTurn();
+            return;
+        }
+    }
 }
 
-function resetGame(){
-    if(computerMoveTimeOut){
+
+function resetGame() {
+    if (computerMoveTimeOut) {
         clearTimeout(computerMoveTimeOut);
         computerMoveTimeOut = null;
     }
-    for(let box of boxes){
+    for (let box of boxes) {
         box.innerText = '';
     }
     gameOver = false;
