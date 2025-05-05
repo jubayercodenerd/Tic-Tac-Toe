@@ -87,7 +87,7 @@ function findWinner(){
                 para.style.color = 'crimson';
                 resetButton.after(para);
                 gameOver = true;
-                button.innerText = 'Play Again';
+                resetButton.innerText = 'Play Again';
                 resolve(true);
                 turnBox[0].style.backgroundColor = 'rgba(0, 0, 0, .1)';
                 turnBox[1].style.backgroundColor = 'rgba(0, 0, 0, .1)';
@@ -99,6 +99,27 @@ function findWinner(){
 }
 
 function computerMove() {
+    //Special Case
+    if(boxes[0].innerText === boxes[7].innerText && boxes[0].innerText === 'X' && boxes[6].innerText === '') {
+        boxes[6].innerText = 'O';
+        boxes[6].style.color = 'gold';
+        changeTurn();
+        return;
+    }
+    if(boxes[6].innerText === boxes[5].innerText && boxes[5].innerText === 'X' && boxes[2].innerText === '') {
+        boxes[2].innerText = 'O';
+        boxes[2].style.color = 'gold';
+        changeTurn();
+        return;
+    }
+
+    if(boxes[2].innerText === boxes[7].innerText && boxes[2].innerText === 'X' && boxes[6].innerText === '') {
+        boxes[6].innerText = 'O';
+        boxes[6].style.color = 'gold';
+        changeTurn();
+        return;
+    }
+
     // 1. Try to win
     for (let index of winIndexes) {
         let possibleWinner = boxes[index[0]].innerText + boxes[index[1]].innerText + boxes[index[2]].innerText;
