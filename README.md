@@ -1,5 +1,5 @@
 # Tic-Tac-Toe
-This is jubayercodenerd and dkhj235's first project. This is a basic beginner project that will get us on the track of web development. 
+This is jubayercodenerd and dkhj235's first project. This is a basic beginner project that will get us on the track of web development.
 
-We are thinking of adding a jumpscare to the game when you lose the game and the percentage of getting
-the jumpscare 25 to 10 percentage. But before that we will delay it or add an action event listener.
+How to play/run?
+To play on your pc clone the repository on your pc or download the project as a zip file and extract all. Open the 'game.html' file in your browser.
